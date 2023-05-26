@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>设备控制台</title>
+</head>
+<style>
+    body {
+        margin: 0px;
+        padding: 0px;
+        overflow: hidden;
+    }
+
+    .main {
+        height: 100%;
+        width: 100%;
+        position: absolute;
+        background: url("https://s2.loli.net/2022/03/24/gCucj5xFU6BTp3d.jpg");
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+
+    .view {
+        height: 90%;
+        /* position: fixed; */
+        margin: 10px 10px 10px 10px;
+        padding: 5px 5px 10px 0px;
+        /* border-radius: 5px; */
+        background-color: #eeecf5;
+        filter: alpha(Opacity=10);
+        -moz-opacity: 0.9;
+        opacity: 0.95;
+        overflow-x: hidden;
+        /*x轴禁止滚动*/
+        overflow-y: scroll;
+        /*y轴滚动*/
+        text-align: center;
+    }
+
+    .view::-webkit-scrollbar {
+        display: none;
+    }
+
+    .title {
+        color: #ddd292;
+        background-color: #862d2d;
+        font-size: 30px;
+        font-weight: 600;
+        text-align: center;
+        /* border-radius: 4px; */
+        margin: 5px 10px 0px 10px;
+    }
+
+    .switch {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        align-items: center;
+        font-size: 20px;
+    }
+
+    .switch .item {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        align-items: center;
+        border: 1px solid #862d2d;
+        width: 100%;
+        margin-left: 5px;
+        margin-top: 5px;
+        border-radius: 5px;
+        padding: 5px 5px;
+    }
+
+
+    button {
+        width: 80%;
+        background-color: #862d2d;
+        border: none;
+        color: white;
+        padding: 5px 5px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 12px;
+        cursor: pointer;
+        /* 指针/手形图标 */
+        margin-top: 10px;
+    }
+
+    /* 清除浮动 */
+    button:after {
+        content: "";
+        clear: both;
+        display: table;
+    }
+
+    button:not(:last-child) {
+        border-right: none;
+        /* 防止边框重叠 */
+    }
+
+    /* 鼠标移动到按钮上的效果 */
+    button:hover {
+        background-color: #cf6466;
+    }
+
+    input[type=range] {
+        width: 100%;
+        margin: 0px 0px;
+
+    }
+
+    .item img {
+        width: 80%;
+        height: 100%;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        padding: 5px;
+    }
+
+    .play {
+        font-size: 16px;
+        border-radius: 5px;
+        border: 1px solid #862d2d;
+        display: flex;
+        flex-direction: row;
+        justify-content: start;
+        border-radius: 4px;
+        margin-top: 5px;
+        margin-left: 5px
+    }
+
+    .play img {
+        width: 80%;
+        /* width: 179px;
+        height: 99px; */
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        padding: 5px;
+    }
+
+    .play .name {
+        width: 30%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        align-items: center;
+        padding: 10px 10px;
+    }
+
+    .play .function {
+        width: 100%;
+        padding: 10px 10px 10px 10px;
+        border-left: 1px solid #862d2d;
+    }
+
+    .play .button {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        align-items: center;
+        height: 50%;
+    }
+
+    .play .button button {
+        margin-left: 5px;
+    }
+
+
+    .hall {
+        font-size: 16px;
+        border-radius: 5px;
+        border: 1px solid #862d2d;
+        display: flex;
+        flex-direction: row;
+        justify-content: start;
+        border-radius: 4px;
+        margin-top: 5px;
+        margin-left: 5px
+    }
+
+    .hall .name {
+        width: 30%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 10px;
+    }
+
+    .hall img {
+        width: 80%;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        padding: 5px;
+    }
+
+    .hall .function {
+        width: 100%;
+        padding: 10px 10px 10px 10px;
+        border-left: 1px solid #862d2d;
+    }
+
+    .hall .button {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        align-items: center;
+    }
+
+    .hall .button button {
+        margin-left: 5px;
+    }
+
+    .TV {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        align-items: center;
+    }
+
+    .TV>button {
+        border-radius: 5px;
+        margin-left: 5px;
+    }
+
+    .light {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        align-items: center;
+    }
+
+    .light>button {
+        border-radius: 5px;
+        margin-left: 5px;
+    }
+
+    .last {
+        border: #862d2d 1px solid;
+        border-radius: 5px;
+        margin-left: 5px;
+        margin-top: 5px;
+        padding: 5px 5px;
+    }
+</style>
+<script src="https://cdn.bootcdn.net/ajax/libs/vue/2.6.12/vue.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+<body>
+    <datalist id="Z">
+        <option>10</option>
+        <option>20</option>
+        <option>30</option>
+        <option>40</option>
+        <option>50</option>
+        <option>60</option>
+        <option>70</option>
+        <option>80</option>
+        <option>90</option>
+        <option>100</option>
+    </datalist>
+    <div class="main" id="root">
+        <div class="title">
+            <span>正果党群设备控制台</span>
+        </div>
+        <div class="view">
+
+            <div class="switch">
+                <div class="item">
+                    <img src="https://s2.loli.net/2022/03/22/TpdVicoE1rvUKAR.jpg">
+                    <span>展厅</span>
+                    <button @click="deviceControl('/zhanting/on')">开启</button>
+                    <button @click="deviceControl('/zhanting/off')">关闭</button>
+                </div>
+                <div class="item">
+                    <img src="https://s2.loli.net/2022/03/22/kBHauRqe694DYUr.jpg">
+                    <span>门前</span>
+                    <button @click="deviceControl('/menqian/on')">开启</button>
+                    <button @click="deviceControl('/menqian/off')">关闭</button>
+                </div>
+                <div class="item">
+                    <img src="https://s2.loli.net/2022/03/22/hwBCQPOuYmZvVeL.jpg">
+                    <span>人大</span>
+                    <button @click="deviceControl('/renda/on')">开启</button>
+                    <button @click="deviceControl('/renda/off')">关闭</button>
+                </div>
+            </div>
+            <div class="play">
+                <div class="name">
+                    <img src="https://s2.loli.net/2022/03/23/pEKhZPdJeR3vcDV.jpg">
+                    <span>习近平新时代</span>
+
+                </div>
+                <div class="function">
+                    <div class="button">
+                        <button @click="xutingPlay('/xuting/play')">播放</button>
+                        <button @click="xutingStop('/xuting/stop')">停止</button>
+                        <button @click="xutingRestPlay('/xuting/resetplay')">重置</button>
+                    </div>
+                    <div>
+                        <span>音量</span>
+                        <input type="range" min="0" max="100" step="10" list="Z" v-model="xtvolume"
+                            @change="xutingSetVolume('/xuting/setvolume?volume=' + xtvolume)">
+                    </div>
+                </div>
+            </div>
+            <div class="play">
+                <div class="name">
+                    <img src="https://s2.loli.net/2022/03/23/OkncYf2XueKLUmb.jpg">
+                    <span>辉煌历程百年巨变</span>
+
+                </div>
+                <div class="function">
+                    <div class="button">
+                        <button @click="shapanPlay('shapan/play')">播放</button>
+                        <button @click="shapanStop('/shapan/stop')">停止</button>
+                        <button @click="shapanRestPlay('/shapan/resetplay')">重置</button>
+                    </div>
+                    <div>
+                        <span>音量</span>
+                        <input type="range" min="0" max="100" step="10" list="Z" v-model="spvolume"
+                            @change="shapanSetVolume('/shapan/setvolume?volume=' + spvolume)">
+                    </div>
+                </div>
+            </div>
+            <div class="hall">
+
+                <div class="name">
+                    <img src="https://s2.loli.net/2022/03/24/RdCQNIYq7Eb8KLA.jpg">
+                    <span>政治生活厅</span>
+                </div>
+
+                <div class="function">
+
+                    <div class="button">
+                        <button @click="politicsHome('politics/home')">主页</button>
+                        <button @click="politicsTakePhotoMode('politics/takephotomode')">拍照模式</button>
+                        <button @click="politicsTakePhoto('politics/takephoto')">拍照</button>
+                    </div>
+
+                    <div class="button">
+                        <button @click="politicsWordOfChange('politics/wordofchange')">誓词演变</button>
+                        <button @click="politicsWordOfParty('politics/wordofparty')">入党誓词</button>
+                        <button @click="politicsRightsAndObligation('politics/rightsandobligation')">权利与义务</button>
+                    </div>
+                    <div class="button">
+                        <button @click="politicsSong('politics/song')">爱国歌曲</button>
+                        <button @click="politicsPrevious('politics/previous')">上一首</button>
+                        <button @click="politicsNext('politics/next')">下一首</button>
+                    </div>
+                    <div>
+                        <span>音量</span>
+                        <input type="range" min="0" max="100" step="10" list="Z" v-model="zzvolume"
+                            @change="politicsSetVolume('/politics/setvolume?volume=' + zzvolume)">
+                    </div>
+                </div>
+
+            </div>
+            <div class="last">
+                <div class="TV">
+                    <Button name="电视1-1" @click="TVControl">电视1-1</Button>
+                    <Button name="电视3-1" @click="TVControl">电视3-1</Button>
+                    <Button name="电视3-2" @click="TVControl">电视3-2</Button>
+                    <Button name="电视3-3" @click="TVControl">电视3-3</Button>
+                    <Button name="电视2-1" @click="TVControl">电视2-1</Button>
+                    <Button name="电视2-2" @click="TVControl">电视2-2</Button>
+                </div>
+                <div class="light">
+                    <button @click="lightControl" name="on">展厅灯全开</button>
+                    <button @click="lightControl" name="off">展厅灯全关</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var vm = new Vue({
+            el: '#root',
+            data: {
+                xtvolume: 50,
+                spvolume: 50,
+                zzvolume: 50
+            },
+            methods: {
+                //控制设备的开关 url为设备的开关地址
+                deviceControl(url) {
+                    axios(url).then(
+                        res => {
+                            console.log(res)
+                        }
+                    ).catch(err => {
+                        console.log(err)
+                    });
+                },
+
+                xutingPlay(url) {
+                    axios(url).then(
+                        res => {
+                            console.log(res)
+                        }
+                    ).catch(err => {
+                        console.log(err)
+                    });
+                },
+                xutingStop(url) {
+                    axios(url).then(
+                        res => {
+                            console.log(res)
+                        }
+                    ).catch(err => {
+                        console.log(err)
+                    });
+                },
+                xutingRestPlay(url) {
+                    axios(url).then(
+                        res => {
+                            console.log(res)
+                        }
+                    ).catch(err => {
+                        console.log(err)
+                    });
+                },
+                xutingSetVolume(url) {
+                    axios(url).then(
+                        res => {
+                            console.log(res)
+                        }
+                    ).catch(err => {
+                        console.log(err)
+                    });
+                },
+
+                shapanPlay(url) {
+                    axios(url).then(
+                        res => {
+                            console.log(res)
+                        }
+                    ).catch(err => {
+                        console.log(err)
+                    });
+                },
+                shapanStop(url) {
+                    axios(url).then(
+                        res => {
+                            console.log(res)
+                        }
+                    ).catch(err => {
+                        console.log(err)
+                    });
+                },
+                shapanRestPlay(url) {
+                    axios(url).then(
+                        res => {
+                            console.log(res)
+                        }
+                    ).catch(err => {
+                        console.log(err)
+                    });
+                },
+                shapanSetVolume(url) {
+                    axios(url).then(
+                        res => {
+                            console.log(res)
+                        }
+                    ).catch(err => {
+                        console.log(err)
+                    });
+                },
+
+                politicsHome(url) {
+                    axios(url).then(
+                        res => {
+                            console.log(res)
+                        }
+                    ).catch(err => {
+                        console.log(err)
+                    });
+                },
+                politicsTakePhotoMode(url) {
+                    axios(url).then(
+                        res => {
+                            console.log(res)
+                        }
+                    ).catch(err => {
+                        console.log(err)
+                    });
+                },
+                politicsTakePhoto(url) {
+                    axios(url).then(
+                        res => {
+                            console.log(res)
+                        }
+                    ).catch(err => {
+                        console.log(err)
+                    });
+                },
+
+                politicsWordOfChange(url) {
+                    axios(url).then(
+                        res => {
+                            console.log(res)
+                        }
+                    ).catch(err => {
+                        console.log(err)
+                    });
+                },
+                politicsWordOfParty(url) {
+                    axios(url).then(
+                        res => {
+                            console.log(res)
+                        }
+                    ).catch(err => {
+                        console.log(err)
+                    });
+                },
+                politicsRightsAndObligation(url) {
+                    axios(url).then(
+                        res => {
+                            console.log(res)
+                        }
+                    ).catch(err => {
+                        console.log(err)
+                    });
+                },
+
+                politicsSong(url) {
+                    axios(url).then(
+                        res => {
+                            console.log(res)
+                        }
+                    ).catch(err => {
+                        console.log(err)
+                    });
+                },
+                politicsPrevious(url) {
+                    axios(url).then(
+                        res => {
+                            console.log(res)
+                        }
+                    ).catch(err => {
+                        console.log(err)
+                    });
+                },
+                politicsNext(url) {
+                    axios(url).then(
+                        res => {
+                            console.log(res)
+                        }
+                    ).catch(err => {
+                        console.log(err)
+                    });
+                },
+                politicsSetVolume(url) {
+                    axios(url).then(
+                        res => {
+                            console.log(res)
+                        }
+                    ).catch(err => {
+                        console.log(err)
+                    });
+                },
+
+                TVControl(even) {
+                    // console.log(even.target.name)
+                    var name = even.target.name
+                    var url = "/tv/screen?name=" + name
+                    axios(url).then(
+                        res => {
+                            console.log(res)
+                        }
+                    ).catch(err => {
+                        console.log(err)
+                    });
+                },
+
+                lightControl(even) {
+                    var name = even.target.name
+                    var url = "/light?name=" + name
+                    axios(url).then(
+                        res => {
+                            console.log(res)
+                        }
+                    ).catch(err => {
+                        console.log(err)
+                    });
+                }
+            }
+        });
+
+    </script>
+</body>
+
+</html>
